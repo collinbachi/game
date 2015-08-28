@@ -1,0 +1,15 @@
+Redneck Racer - A D. Collin Bachi production
+
+Plot: Step into the shoes of a lifted truck driving, rebel flag waving, good ol' boy. Your goal is to get yourself and your friends to Taco Bell as fast as possible, while avoiding the police and picking up as much contraband as possible along the way. 
+
+Two game modes:
+	Time trial: Collect powerups, avoid obstacles and finish the course as fast as possible
+	Boss battle: Survive/defeat the boss (another car)
+
+Goal: Reach the goal or defeat the boss
+
+Mechanics: Arrow keys will move a truck sprite in four directions at a slow pace. Fast moving background will give the illusion of speed. Obstacles, powerups, and objectives will appear from the top of the screen and move downward. During boss battles, the space bar will launch projectiles from your truck. You will avoid collisions with the boss, which will be its primary form of aggression. 
+
+Levels: Levels will increase in difficulty, meaning placement of obstacles and powerups and general course layout.
+
+Modes: The "boss battle" will introduce new game dynamics. You will jockey for position and hurl projectiles at another car on the road. The battle will be won when you defeat or escape the other car.

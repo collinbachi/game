@@ -1,0 +1,1 @@
+- if two keys already down (arrows), ignore third key (how to ignore key up too?)
