@@ -6,12 +6,15 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
+import javafx.geometry.Rectangle2D;
+import javafx.animation.Animation;
+import javafx.util.Duration;
 
 
 /**
  * Separate the game code from some of the boilerplate code.
  * 
- * @author Robert C. Duvall
+ * @author D. Collin Bachi
  */
 class RaceGame {
     public static final String TITLE = "Ridin' Dirty";
@@ -21,7 +24,8 @@ class RaceGame {
     private static Tuple BOUNCER_SPEED = new Tuple(0,0);
 
     private Scene myScene;
-    private ImageView myBouncer;
+    private Truck myBouncer;
+    private ImageView background;
     private Rectangle myTopBlock;
     private Rectangle myBottomBlock;
 
@@ -42,8 +46,26 @@ class RaceGame {
         // Create a place to see the shapes
         myScene = new Scene(root, width, height, Color.WHITE);
         // Make some shapes and set their properties
-        Image image = new Image(getClass().getClassLoader().getResourceAsStream("duke.gif"));
-        myBouncer = new ImageView(image);
+        Image roadImage = new Image(getClass().getClassLoader().getResourceAsStream("road.jpg"));
+        background = new ImageView(roadImage);
+        Rectangle2D viewportRect = new Rectangle2D(90, 35, 800, 500);
+        background.setViewport(viewportRect);
+
+
+        Animation animation = new SpriteAnimation(
+                background,
+                Duration.millis(250),
+                500, 1,
+                0, -1,
+                800, 500
+        );
+        animation.setCycleCount(Animation.INDEFINITE);
+        animation.play();
+
+
+        //Image image = new Image(getClass().getClassLoader().getResourceAsStream("truck.png"));
+        //myBouncer = new ImageView(image);
+        myBouncer = new Truck();
         // x and y represent the top left corner, so center it
         myBouncer.setX(width / 2 - myBouncer.getBoundsInLocal().getWidth() / 2);
         myBouncer.setY(height / 2  - myBouncer.getBoundsInLocal().getHeight() / 2);
@@ -52,6 +74,7 @@ class RaceGame {
         myBottomBlock = new Rectangle(width / 2 - 25, height / 2 + 50, 50, 50);
         myBottomBlock.setFill(Color.BISQUE);
         // order added to the group is the order in whuch they are drawn
+        root.getChildren().add(background);
         root.getChildren().add(myBouncer);
         root.getChildren().add(myTopBlock);
         root.getChildren().add(myBottomBlock);
@@ -102,19 +125,19 @@ class RaceGame {
         switch (code) {
             case RIGHT:
                 BOUNCER_SPEED = new Tuple(SPEED_CONSTANT,BOUNCER_SPEED.y);
-                myTopBlock.setX(myTopBlock.getX() + KEY_INPUT_SPEED);
+                myBouncer.gotoLabel("right");
                 break;
             case LEFT:
                 BOUNCER_SPEED = new Tuple(-SPEED_CONSTANT,BOUNCER_SPEED.y);
-                myTopBlock.setX(myTopBlock.getX() - KEY_INPUT_SPEED);
+                myBouncer.gotoLabel("left");
                 break;
             case UP:
                 BOUNCER_SPEED = new Tuple(BOUNCER_SPEED.x,-SPEED_CONSTANT); 
-                myTopBlock.setY(myTopBlock.getY() - KEY_INPUT_SPEED);
+                myBouncer.gotoLabel("default");
                 break;
             case DOWN:
                 BOUNCER_SPEED = new Tuple(BOUNCER_SPEED.x,SPEED_CONSTANT); 
-                myTopBlock.setY(myTopBlock.getY() + KEY_INPUT_SPEED);
+                myBouncer.gotoLabel("default");
                 break;
             default:
                 // do nothing
