@@ -25,6 +25,7 @@ class RaceGame {
 
     private Scene myScene;
     private Truck myBouncer;
+    HumanController humanController;
     private ImageView background;
     private Rectangle myTopBlock;
     private Rectangle myBottomBlock;
@@ -79,9 +80,10 @@ class RaceGame {
         root.getChildren().add(myTopBlock);
         root.getChildren().add(myBottomBlock);
         // Respond to input
-        myScene.setOnKeyPressed(e -> handleKeyPress(e.getCode()));
+        /*myScene.setOnKeyPressed(e -> handleKeyPress(e.getCode()));
         myScene.setOnKeyReleased(e -> handleKeyRelease(e.getCode()));
-        myScene.setOnMouseClicked(e -> handleMouseInput(e.getX(), e.getY()));
+        myScene.setOnMouseClicked(e -> handleMouseInput(e.getX(), e.getY()));*/
+        humanController = new HumanController(myBouncer, myScene);
         return myScene;
     }
 
@@ -93,11 +95,12 @@ class RaceGame {
      */
     public void step (double elapsedTime) {
         // update attributes
-        myBouncer.setX(myBouncer.getX() + BOUNCER_SPEED.x * elapsedTime);
+        myBouncer.step(elapsedTime);
+        /*myBouncer.setX(myBouncer.getX() + BOUNCER_SPEED.x * elapsedTime);
         myBouncer.setY(myBouncer.getY() + BOUNCER_SPEED.y * elapsedTime);
-	if (myBouncer.getX()+myBouncer.getBoundsInLocal().getWidth() > myScene.getWidth() || myBouncer.getX() < 0){
-		BOUNCER_SPEED = new Tuple(BOUNCER_SPEED.x * -1, BOUNCER_SPEED.y * -1);
-	}
+	   if (myBouncer.getX()+myBouncer.getBoundsInLocal().getWidth() > myScene.getWidth() || myBouncer.getX() < 0){
+		  BOUNCER_SPEED = new Tuple(BOUNCER_SPEED.x * -1, BOUNCER_SPEED.y * -1);
+	   }*/
         myTopBlock.setRotate(myBottomBlock.getRotate() - 1);
         myBottomBlock.setRotate(myBottomBlock.getRotate() + 1);
         

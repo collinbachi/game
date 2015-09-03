@@ -11,31 +11,58 @@ class HumanController {
 
 	private Truck truck;
 	private Scene scene;
+	private boolean right_down = false;
+	private boolean left_down = false;
+	private boolean up_down = false;
+	private boolean down_down = false;
 
 	public HumanController(Truck t, Scene s){
 		truck = t;
 		scene = s;
-		myScene.setOnKeyPressed(e -> handleKeyPress(e.getCode()));
-        myScene.setOnKeyReleased(e -> handleKeyRelease(e.getCode()));
+		scene.setOnKeyPressed(e -> handleKeyPress(e.getCode()));
+        scene.setOnKeyReleased(e -> handleKeyRelease(e.getCode()));
 	}
 
 	private void handleKeyPress (KeyCode code) {
         switch (code) {
             case RIGHT:
-                BOUNCER_SPEED = new Tuple(SPEED_CONSTANT,BOUNCER_SPEED.y);
-                myBouncer.gotoLabel("right");
+                if (!right_down) truck.addVelocity(1,0);
+                right_down = true;
                 break;
             case LEFT:
-                BOUNCER_SPEED = new Tuple(-SPEED_CONSTANT,BOUNCER_SPEED.y);
-                myBouncer.gotoLabel("left");
+                if (!left_down) truck.addVelocity(-1,0);
+                left_down = true;
                 break;
             case UP:
-                BOUNCER_SPEED = new Tuple(BOUNCER_SPEED.x,-SPEED_CONSTANT); 
-                myBouncer.gotoLabel("default");
+                if (!up_down) truck.addVelocity(0,-1); 
+                up_down = true;
                 break;
             case DOWN:
-                BOUNCER_SPEED = new Tuple(BOUNCER_SPEED.x,SPEED_CONSTANT); 
-                myBouncer.gotoLabel("default");
+                if (!down_down) truck.addVelocity(0,1); 
+                down_down = true;
+                break;
+            default:
+                // do nothing
+        }
+    }
+
+	private void handleKeyRelease (KeyCode code) {
+        switch (code) {
+            case RIGHT:
+                truck.addVelocity(-1,0);
+                right_down = false;
+                break;
+            case LEFT:
+                truck.addVelocity(1,0);
+                left_down = false;
+                break;
+            case UP:
+                truck.addVelocity(0,1); 
+                up_down = false;
+                break;
+            case DOWN:
+                truck.addVelocity(0,-1); 
+                down_down = false;
                 break;
             default:
                 // do nothing
