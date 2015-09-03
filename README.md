@@ -3,6 +3,8 @@ D. Collin Bachi's class repository...
 # game
 First project for CompSci 308 Fall 2015
 
+See https://github.com/collinbachi/game_dcb31 for original commits.
+
 Name:
 
 Date started:
