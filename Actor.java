@@ -18,12 +18,6 @@ class Actor extends ImageView {
 		this.frames.put("default", img);
 	}
 
-	/*public Actor(String s){
-		super(new Image(getResourceAsStream(s)));
-		this.frames = new HashMap<String, Image>();
-		this.frames.put("default", img);
-	}*/
-
 	public void addFrameWithLabel(Image img, String label){
 		this.frames.put(label, img);
 	}
