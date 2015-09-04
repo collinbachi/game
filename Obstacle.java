@@ -28,6 +28,7 @@ class Obstacle extends Actor {
 		if (this.getBoundsInParent().intersects(truck.getBoundsInParent())) {
             raceGame.handleCollision(this, truck);
         }
+        if (this.getY() > 900) raceGame.removeActor(this);
 	}
 
 	public void setHook(RaceGame rg){

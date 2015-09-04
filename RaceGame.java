@@ -13,6 +13,10 @@ import javafx.scene.text.Text;
 import java.util.List;
 import java.util.Arrays;
 import java.util.ArrayList;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 
 
 /**
@@ -40,9 +44,10 @@ class RaceGame {
     private Image barricadeImage;
     private Text scoreBoard;
 
-    private double splashTime = 0;
-
     private Group root;
+
+    private boolean crashed = false;
+
 
     /**
      * Returns name of the game.
@@ -51,10 +56,28 @@ class RaceGame {
         return TITLE;
     }
 
+    private void reset(){
+        System.out.println("resetting...");
+        distance = 0;
+        barricades = Arrays.asList(350, 25, 420, 500, 455, 25);
+        for (Obstacle o : barricadesList) removeActor(o);
+        barricadesList = new ArrayList<Obstacle>();
+        barricadesIndex = 0;
+        crashed = false;
+        background.setViewport(new Rectangle2D(90, 35, 800, 626));
+        myTruck.reset();
+        cop.reset();
+        myTruck.setX(800 / 2 - myTruck.getBoundsInLocal().getWidth() / 2);
+        myTruck.setY(500 / 2  - myTruck.getBoundsInLocal().getHeight() / 2);
+        cop.setX(myTruck.getX());
+        cop.setY(myTruck.getY() + 2 * myTruck.getHeight());
+    }
     /**
      * Create the game's scene
      */
     public Scene init (int width, int height) {
+        System.out.println("INITIALIZING");
+
         // Create a scene graph to organize the scene
         root = new Group();
         // Create a place to see the shapes
@@ -81,7 +104,8 @@ class RaceGame {
         myTruck.setX(width / 2 - myTruck.getBoundsInLocal().getWidth() / 2);
         myTruck.setY(height / 2  - myTruck.getBoundsInLocal().getHeight() / 2);
 
-        cop = new Cop();
+        cop = new Cop(myTruck);
+        cop.setHook(this);
         cop.setX(myTruck.getX());
         cop.setY(myTruck.getY() + 2 * myTruck.getHeight());
 
@@ -103,6 +127,7 @@ class RaceGame {
      * Update the game world
      */
     public void step (double elapsedTime) {
+        if (crashed) return;
         // update attributes
         myTruck.step(elapsedTime);
         cop.step(elapsedTime);
@@ -141,8 +166,25 @@ class RaceGame {
         }
     }
 
-    public void handleCollision(Actor a, Actor b){
+    public void handleCollision(Actor a, Truck b){
         System.out.println("Collision!");
+        b.gotoLabel("crash");
+        crashed = true;
+        KeyFrame crashFrame = new KeyFrame(Duration.millis(1000));
+        Timeline crashAnimation = new Timeline();
+        crashAnimation.setCycleCount(2);
+        crashAnimation.getKeyFrames().add(crashFrame);
+        crashAnimation.play();
+        crashAnimation.setOnFinished( new EventHandler<ActionEvent>() {
+            public void handle(ActionEvent t){
+                System.out.println("made it here?");
+                reset();
+            }
+        });
+    }
+
+    public void removeActor(Actor a){
+        root.getChildren().remove(a);
     }
 
     public Scene showSplash(int width, int height) {

@@ -12,12 +12,20 @@ class Truck extends Actor {
 	private double xvel = 0.0;
 	private double yvel = 0.0;
 
+	public void reset(){
+		TRUCK_SPEED = 60.0;
+	    xvel = 0.0;
+	  	yvel = 0.0;
+	}
+
 	public Truck(){
 		super(new Image(Truck.class.getClassLoader().getResourceAsStream("truck.png")));
 		Image left = new Image(getClass().getClassLoader().getResourceAsStream("left.png"));
 		Image right = new Image(getClass().getClassLoader().getResourceAsStream("right.png"));
+		Image crash = new Image(getClass().getClassLoader().getResourceAsStream("crash.png"));
 		addFrameWithLabel(left, "left");
 		addFrameWithLabel(right, "right");
+		addFrameWithLabel(crash, "crash");
 	}
 
 	public void addVelocity(double deltax, double deltay){
