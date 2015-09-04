@@ -36,7 +36,7 @@ class RaceGame {
     private AIController copController;
     private ImageView background;
     private Rectangle2D backgroundViewport;
-    private Image tacoBellImage;
+    private Image tacoImage;
     private ImageView tacoBell;
 
     private int distance = 0;
@@ -49,6 +49,7 @@ class RaceGame {
     private int powerupsIndex = 0;
 
     private Text scoreBoard;
+    private Text displayText;
 
     private Group root;
 
@@ -120,11 +121,13 @@ class RaceGame {
         cop.setY(myTruck.getY() + 2 * myTruck.getHeight() + 650);
 
         scoreBoard = new Text(10, 50, "3189321m");
+        displayText = new Text(10, 22, "Hi there");
         // order added to the group is the order in whuch they are drawn
         root.getChildren().add(background);
         root.getChildren().add(myTruck);
         root.getChildren().add(cop);
         root.getChildren().add(scoreBoard);
+        root.getChildren().add(displayText);
        
         humanController = new HumanController(myTruck, myScene);
         copController = new AIController(cop, myScene, myTruck);
@@ -140,14 +143,15 @@ class RaceGame {
         myTruck.step(elapsedTime);
         cop.step(elapsedTime);
         if (distance>5300){
+            displayText.setText("You Win!!!");
             if (tacoBell==null){
-                Image tacoImage = new Image(getClass().getClassLoader().getResourceAsStream("Taco-Bell.jpg"));
-                tacoBell = new ImageView(tacoBellImage);
+                tacoImage = new Image(getClass().getClassLoader().getResourceAsStream("Taco-Bell.jpg"));
+                tacoBell = new ImageView(tacoImage);
                 tacoBell.setX(0);
                 tacoBell.setY(0-tacoBell.getBoundsInLocal().getHeight());
+                root.getChildren().add(tacoBell);
             }
-            System.out.println(tacoBell.getY());
-            if (tacoBell.getY() < tacoBell.getBoundsInLocal().getHeight()) tacoBell.setY(tacoBell.getY()+1);
+            if (tacoBell.getY() < 0) tacoBell.setY(tacoBell.getY()+1);
             myTruck.stop();
             if (SCROLL_SPEED > 0) SCROLL_SPEED--;
         }
@@ -159,11 +163,14 @@ class RaceGame {
         scoreBoard.setText(distance + "m");
 
         if (distance > 2500 && distance < 3500){
+            displayText.setText("Lookout! POLICE!");
             copController.setMode("follow");
         }else if(distance>3500 && distance < 5000){
+            displayText.setText("Take evasive manuevers!");
             copController.setMode("random");
             cop.setBonus(1.6);
         }else if(distance>5000){
+            displayText.setText("I think you lost him. Woohoo!");
             copController.setMode("fallbehind");
         }
 

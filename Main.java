@@ -36,7 +36,7 @@ public class Main extends Application {
         s.show();
 
         // sets the game's loop
-        KeyFrame splashFrame = new KeyFrame(Duration.millis(1000));
+        KeyFrame splashFrame = new KeyFrame(Duration.millis(2000));
         Timeline splashAnimation = new Timeline();
         splashAnimation.setCycleCount(2);
         splashAnimation.getKeyFrames().add(splashFrame);
