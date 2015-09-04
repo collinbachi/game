@@ -43,15 +43,12 @@ class Truck extends Actor {
 	public void powerup(){
 		if (bonus==1) bonus = 1.5;
 			else bonus += 1;
-		System.out.println("powerup");
 		Timer timer = new Timer();
 		timer.schedule( new TimerTask(){
 			public void run(){
 				bonus = 1;
-				System.out.println("no more power");
 			}
 		}, 7000);
-		System.out.println(bonus);
 	}
 
 	public void stop(){

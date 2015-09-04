@@ -118,22 +118,18 @@ class AIController {
         //Check for collisions, and reverse if so
         if (cop.getX() < scene.getX()){
         	cop.setVelocity(1, 0);
-        	System.out.println("Cop reverse");
 
         }
         if (cop.getX() > scene.getX() + scene.getWidth() - cop.getWidth()){
         	cop.setVelocity(-1, 0);       
-        	System.out.println("Cop reverse");
 
         }
         if (cop.getY() < scene.getY()){
         	cop.setVelocity(0, 1);
-        	System.out.println("Cop reverse");
 
         }
         if (cop.getY() > scene.getY() + scene.getHeight() - cop.getHeight()){
         	cop.setVelocity(0, -1);
-        	System.out.println("Cop reverse");
 
         }
 	}
