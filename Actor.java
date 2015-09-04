@@ -30,4 +30,12 @@ class Actor extends ImageView {
 		}
 	}
 
+	public double getWidth(){
+		return this.getBoundsInLocal().getWidth();
+	}
+
+	public double getHeight(){
+		return this.getBoundsInLocal().getHeight();
+	}
+
 }

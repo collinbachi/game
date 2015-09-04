@@ -1,3 +1,11 @@
+/**
+ * Class for sprite animations
+ *
+ * @author D. Collin Bachi
+ * @author Adapted from  Michael Heinrichs blog post example 
+ * http://blog.netopyr.com/2012/03/09/creating-a-sprite-animation-with-javafx/
+ */
+
 import javafx.animation.Interpolator;
 import javafx.animation.Transition;
 import javafx.geometry.Rectangle2D;
@@ -36,10 +44,8 @@ public class SpriteAnimation extends Transition {
     protected void interpolate(double k) {
         final int index = Math.min((int) Math.floor(k * count), count - 1);
         if (index != lastIndex) {
-            //final int x = (index % columns) * width  + offsetX;
-            //final int y = (index / columns) * height + offsetY;
             final int x = index * offsetX + 90;
-            final int y = index * offsetY + 500;
+            final int y = index * offsetY + 626;
             imageView.setViewport(new Rectangle2D(x, y, width, height));
             lastIndex = index;
         }
