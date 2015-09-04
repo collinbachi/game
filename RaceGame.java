@@ -36,15 +36,15 @@ class RaceGame {
     private AIController copController;
     private ImageView background;
     private Rectangle2D backgroundViewport;
+    private Image tacoBellImage;
+    private ImageView tacoBell;
 
     private int distance = 0;
-    private List<Integer> barricades = Arrays.asList(
-        2300, 100, 2350, 275, 2375, 15, 2425, 600, 2475, 500, 2550, 325, 2700, 15);
+    private List<Integer> barricades = Arrays.asList(350, 25, 420, 500, 455, 25, 550, 65, 625, 105, 675, 225, 700, 275, 750, 45, 1000, 100, 1200, 600, 1400, 175, 1550, 600, 1600, 525, 1700, 400, 2300, 100, 2350, 275, 2375, 15, 2425, 600, 2475, 500, 2550, 325, 2700, 15);
     private ArrayList<Obstacle> barricadesList = new ArrayList<Obstacle>();
     private int barricadesIndex = 0;
 
-    private List<Integer> powerups = Arrays.asList(
-        1870, 400, 1950, 470, 2320, 580, 2370, 480, 2900, 400);
+    private List<Integer> powerups = Arrays.asList(385, 375, 455, 325, 550, 365, 575, 600, 1000, 700, 1100, 375, 1870, 400, 1950, 470, 2320, 580, 2370, 480, 2900, 400);
     private ArrayList<Powerup> powerupsList = new ArrayList<Powerup>();
     private int powerupsIndex = 0;
 
@@ -139,6 +139,18 @@ class RaceGame {
         // update attributes
         myTruck.step(elapsedTime);
         cop.step(elapsedTime);
+        if (distance>5300){
+            if (tacoBell==null){
+                Image tacoImage = new Image(getClass().getClassLoader().getResourceAsStream("Taco-Bell.jpg"));
+                tacoBell = new ImageView(tacoBellImage);
+                tacoBell.setX(0);
+                tacoBell.setY(0-tacoBell.getBoundsInLocal().getHeight());
+            }
+            System.out.println(tacoBell.getY());
+            if (tacoBell.getY() < tacoBell.getBoundsInLocal().getHeight()) tacoBell.setY(tacoBell.getY()+1);
+            myTruck.stop();
+            if (SCROLL_SPEED > 0) SCROLL_SPEED--;
+        }
         
         for (Obstacle b : barricadesList) b.step();
         for (Powerup p : powerupsList) p.step();
@@ -148,9 +160,9 @@ class RaceGame {
 
         if (distance > 2500 && distance < 3500){
             copController.setMode("follow");
-        }else if(distance>3500){
+        }else if(distance>3500 && distance < 5000){
             copController.setMode("random");
-            cop.setBonus(2.0);
+            cop.setBonus(1.6);
         }else if(distance>5000){
             copController.setMode("fallbehind");
         }
@@ -198,7 +210,6 @@ class RaceGame {
     }
 
     public void handleCollision(Actor a, Truck b){
-        System.out.println("Collision!");
         if (b.isInvincible()) return;
         b.gotoLabel("crash");
         crashed = true;

@@ -43,7 +43,7 @@ class AIController {
 		if (mode.equals("random")) randomDecision();
         if (mode.equals("follow")) follow(150);
         if (mode.equals("fallbehind")){
-            followDist--;
+            followDist+=8;
             follow(followDist);
         }
 	}
@@ -84,8 +84,8 @@ class AIController {
 
 	private void randomDecision(){
 		int opt = (int) Math.floor(Math.random() * 8);
-        if (Math.random() < .2){
-            driveTo((int)(truck.getX() + (Math.random() - .5)*250), (int)truck.getY());
+        if (Math.random() < .1){
+            driveTo((int)(truck.getX() + (Math.random() - .5)*650), (int)truck.getY());
         }
 		if (Math.random() < .95) opt = -1; //Do nothing most of the time
 		switch (opt) {
