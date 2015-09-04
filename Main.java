@@ -4,7 +4,8 @@ import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 
 /**
  * This is the main program, it is basically boilerplate to create
@@ -30,18 +31,33 @@ public class Main extends Application {
         myGame = new RaceGame();
         s.setTitle(myGame.getTitle());
 
-        // attach game to the stage and display it
-        Scene scene = myGame.init(800, 500);
-        s.setScene(scene);
+        Scene splashScene = myGame.showSplash(800, 500);
+        s.setScene(splashScene);
         s.show();
 
         // sets the game's loop
-        KeyFrame frame = new KeyFrame(Duration.millis(MILLISECOND_DELAY),
-                                      e -> myGame.step(SECOND_DELAY));
-        Timeline animation = new Timeline();
-        animation.setCycleCount(Timeline.INDEFINITE);
-        animation.getKeyFrames().add(frame);
-        animation.play();
+        KeyFrame splashFrame = new KeyFrame(Duration.millis(1000));
+        Timeline splashAnimation = new Timeline();
+        splashAnimation.setCycleCount(2);
+        splashAnimation.getKeyFrames().add(splashFrame);
+        splashAnimation.play();
+        splashAnimation.setOnFinished( new EventHandler<ActionEvent>() {
+            public void handle(ActionEvent t){
+                // attach game to the stage and display it
+                Scene scene = myGame.init(800, 500);
+                s.setScene(scene);
+                s.show();
+
+                // sets the game's loop
+                KeyFrame frame = new KeyFrame(Duration.millis(MILLISECOND_DELAY),
+                                              e -> myGame.step(SECOND_DELAY));
+                Timeline animation = new Timeline();
+                animation.setCycleCount(Timeline.INDEFINITE);
+                animation.getKeyFrames().add(frame);
+                animation.play();
+            }
+        });
+
     }
 
     /**

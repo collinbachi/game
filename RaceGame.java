@@ -40,6 +40,8 @@ class RaceGame {
     private Image barricadeImage;
     private Text scoreBoard;
 
+    private double splashTime = 0;
+
     private Group root;
 
     /**
@@ -57,6 +59,8 @@ class RaceGame {
         root = new Group();
         // Create a place to see the shapes
         myScene = new Scene(root, width, height, Color.WHITE);
+
+
         // Load background and set animation
         Image roadImage = new Image(getClass().getClassLoader().getResourceAsStream("road.jpg"));
         background = new ImageView(roadImage);
@@ -139,5 +143,15 @@ class RaceGame {
 
     public void handleCollision(Actor a, Actor b){
         System.out.println("Collision!");
+    }
+
+    public Scene showSplash(int width, int height) {
+        Group splashRoot = new Group();
+        Scene mySplashScene = new Scene(splashRoot, width, height, Color.WHITE);
+        // credz to Ian Guy for the cool painting
+        Image splashImage = new Image(getClass().getClassLoader().getResourceAsStream("splash.jpg"));
+        ImageView splash = new ImageView(splashImage);
+        splashRoot.getChildren().add(splash);
+        return mySplashScene;
     }
 }
