@@ -11,23 +11,20 @@ import javafx.event.EventHandler;
  * This is the main program, it is basically boilerplate to create
  * an animated scene.
  * 
- * @author D. Collin Bachi
+ * @author D. Collin Bachi (adapted from class example)
  */
 public class Main extends Application {
-    public static final int SIZE = 800;
     public static final int FRAMES_PER_SECOND = 60;
     private static final int MILLISECOND_DELAY = 1000 / FRAMES_PER_SECOND;
     private static final double SECOND_DELAY = 1.0 / FRAMES_PER_SECOND;
 
     private RaceGame myGame;
 
-
     /**
      * Set things up at the beginning.
      */
     @Override
     public void start (Stage s) {
-        // create your own game here
         myGame = new RaceGame();
         s.setTitle(myGame.getTitle());
 
@@ -48,7 +45,6 @@ public class Main extends Application {
                 s.setScene(scene);
                 s.show();
 
-                // sets the game's loop
                 KeyFrame frame = new KeyFrame(Duration.millis(MILLISECOND_DELAY),
                                               e -> myGame.step(SECOND_DELAY));
                 Timeline animation = new Timeline();
@@ -57,7 +53,6 @@ public class Main extends Application {
                 animation.play();
             }
         });
-
     }
 
     /**

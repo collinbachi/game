@@ -1,7 +1,6 @@
 import javafx.scene.input.KeyCode;
 import javafx.scene.Scene;
 
-
 /**
  * Handles keyboard/mouse input from user
  * 

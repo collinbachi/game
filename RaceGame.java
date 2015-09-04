@@ -20,15 +20,15 @@ import javafx.event.EventHandler;
 
 
 /**
- * Separate the game code from some of the boilerplate code.
+ * This class holds much of the game logic and keeps track of the actors.
  * 
  * @author D. Collin Bachi
  */
 class RaceGame {
-    public static final String TITLE = "Ridin' Dirty";
-    private static double SPEED_CONSTANT = 60.0;
+    public static final String TITLE = "Redneck Racer";
     private static int SCROLL_SPEED = 4;
 
+    private Group root;
     private Scene myScene;
     private Truck myTruck;
     private Cop cop;
@@ -38,8 +38,11 @@ class RaceGame {
     private Rectangle2D backgroundViewport;
     private Image tacoImage;
     private ImageView tacoBell;
-
+    private Text scoreBoard;
+    private Text displayText;
     private int distance = 0;
+    private boolean crashed = false;
+
     private List<Integer> barricades = Arrays.asList(350, 25, 420, 500, 455, 25, 550, 65, 625, 105, 675, 225, 700, 275, 750, 45, 1000, 100, 1200, 600, 1400, 175, 1550, 600, 1600, 525, 1700, 400, 2300, 100, 2350, 275, 2375, 15, 2425, 600, 2475, 500, 2550, 325, 2700, 15);
     private ArrayList<Obstacle> barricadesList = new ArrayList<Obstacle>();
     private int barricadesIndex = 0;
@@ -47,13 +50,6 @@ class RaceGame {
     private List<Integer> powerups = Arrays.asList(385, 375, 455, 325, 550, 365, 575, 600, 1000, 700, 1100, 375, 1870, 400, 1950, 470, 2320, 580, 2370, 480, 2900, 400);
     private ArrayList<Powerup> powerupsList = new ArrayList<Powerup>();
     private int powerupsIndex = 0;
-
-    private Text scoreBoard;
-    private Text displayText;
-
-    private Group root;
-
-    private boolean crashed = false;
 
 
     /**
@@ -63,9 +59,19 @@ class RaceGame {
         return TITLE;
     }
 
+    /**
+     * Resets game after a loss.
+     */
     private void reset(){
-        System.out.println("resetting...");
+        myTruck.reset();
+        myTruck.setX(800 / 2 - myTruck.getBoundsInLocal().getWidth() / 2);
+        myTruck.setY(500 / 2  - myTruck.getBoundsInLocal().getHeight() / 2);
+        cop.reset();
+        cop.setX(myTruck.getX());
+        cop.setY(myTruck.getY() + 2 * myTruck.getHeight() + 650);
         distance = 0;
+        crashed = false;
+
         for (Obstacle o : barricadesList) removeActor(o);
         barricadesList = new ArrayList<Obstacle>();
         barricadesIndex = 0;
@@ -74,44 +80,24 @@ class RaceGame {
         powerupsList = new ArrayList<Powerup>();
         powerupsIndex = 0;
 
-        crashed = false;
         background.setViewport(new Rectangle2D(90, 35, 800, 626));
-        myTruck.reset();
-        cop.reset();
-        myTruck.setX(800 / 2 - myTruck.getBoundsInLocal().getWidth() / 2);
-        myTruck.setY(500 / 2  - myTruck.getBoundsInLocal().getHeight() / 2);
-        cop.setX(myTruck.getX());
-        cop.setY(myTruck.getY() + 2 * myTruck.getHeight() + 650);
     }
+
     /**
-     * Create the game's scene
+     * Initialize game world
      */
     public Scene init (int width, int height) {
-        System.out.println("INITIALIZING");
-
         // Create a scene graph to organize the scene
         root = new Group();
-        // Create a place to see the shapes
         myScene = new Scene(root, width, height, Color.WHITE);
-
 
         // Load background and set animation
         Image roadImage = new Image(getClass().getClassLoader().getResourceAsStream("road.jpg"));
         background = new ImageView(roadImage);
         backgroundViewport = new Rectangle2D(90, 35, 800, 626);
         background.setViewport(backgroundViewport);
-        /*Animation animation = new SpriteAnimation(
-                background,
-                Duration.millis(750),
-                726, 1,
-                0, -1,
-                800, 500
-        );
-        animation.setCycleCount(Animation.INDEFINITE);
-        animation.play(); */
 
         myTruck = new Truck();
-        // x and y represent the top left corner, so center it
         myTruck.setX(width / 2 - myTruck.getBoundsInLocal().getWidth() / 2);
         myTruck.setY(height / 2  - myTruck.getBoundsInLocal().getHeight() / 2);
 
@@ -122,7 +108,7 @@ class RaceGame {
 
         scoreBoard = new Text(10, 50, "3189321m");
         displayText = new Text(10, 22, "Hi there");
-        // order added to the group is the order in whuch they are drawn
+
         root.getChildren().add(background);
         root.getChildren().add(myTruck);
         root.getChildren().add(cop);
@@ -135,70 +121,23 @@ class RaceGame {
     }
 
     /**
-     * Update the game world
+     * Update the game world -- Main game loop
      */
     public void step (double elapsedTime) {
         if (crashed) return;
-        // update attributes
         myTruck.step(elapsedTime);
         cop.step(elapsedTime);
-        if (distance>5300){
-            displayText.setText("You Win!!!");
-            if (tacoBell==null){
-                tacoImage = new Image(getClass().getClassLoader().getResourceAsStream("Taco-Bell.jpg"));
-                tacoBell = new ImageView(tacoImage);
-                tacoBell.setX(0);
-                tacoBell.setY(0-tacoBell.getBoundsInLocal().getHeight());
-                root.getChildren().add(tacoBell);
-            }
-            if (tacoBell.getY() < 0) tacoBell.setY(tacoBell.getY()+1);
-            myTruck.stop();
-            if (SCROLL_SPEED > 0) SCROLL_SPEED--;
-        }
-        
-        for (Obstacle b : barricadesList) b.step();
-        for (Powerup p : powerupsList) p.step();
+        checkTacoBell();
+        handleObstacles();
+        handlePowerups();    
+        triggerGameEvents();
+        updateBackground();
+    }
 
-        distance++;
-        scoreBoard.setText(distance + "m");
-
-        if (distance > 2500 && distance < 3500){
-            displayText.setText("Lookout! POLICE!");
-            copController.setMode("follow");
-        }else if(distance>3500 && distance < 5000){
-            displayText.setText("Take evasive manuevers!");
-            copController.setMode("random");
-            cop.setBonus(1.6);
-        }else if(distance>5000){
-            displayText.setText("I think you lost him. Woohoo!");
-            copController.setMode("fallbehind");
-        }
-
-        if (barricadesIndex < barricades.size() && barricades.get(barricadesIndex)==distance){
-            System.out.print("New Barricade! ");
-            System.out.println(distance);
-            Obstacle newBarricade = new Obstacle(myTruck);
-            newBarricade.setX(barricades.get(barricadesIndex+1));
-            newBarricade.setY(-150);
-            newBarricade.setVelocity(0, SCROLL_SPEED);
-            newBarricade.setHook(this);
-            barricadesList.add(newBarricade);
-            root.getChildren().add(newBarricade);
-            barricadesIndex+=2;
-        }
-
-        if (powerupsIndex < powerups.size() && powerups.get(powerupsIndex)==distance){
-            Powerup newPowerup = new Powerup(myTruck);
-            newPowerup.setX(powerups.get(powerupsIndex+1));
-            newPowerup.setY(-150);
-            newPowerup.setVelocity(0, SCROLL_SPEED);
-            newPowerup.setHook(this);
-            powerupsList.add(newPowerup);
-            root.getChildren().add(newPowerup);
-            powerupsIndex+=2;
-        }
-
-        // Horribly implemented
+    /**
+     * Updates the scrolling background.
+     */
+    public void updateBackground(){
         if (background.viewportProperty().getValue().getMinY() > 5){
             background.setViewport(new Rectangle2D(
                     background.viewportProperty().getValue().getMinX(),
@@ -216,6 +155,83 @@ class RaceGame {
         }
     }
 
+    /**
+     * Triggers game events sequentially, and updates text displays.
+     */
+    public void triggerGameEvents(){
+        distance++;
+        scoreBoard.setText(distance + "m");
+
+        if (distance > 2500 && distance < 3500){
+            displayText.setText("Lookout! POLICE!");
+            copController.setMode("follow");
+        }else if(distance>3500 && distance < 5000){
+            displayText.setText("Take evasive manuevers!");
+            copController.setMode("random");
+            cop.setBonus(1.6);
+        }else if(distance>5000){
+            displayText.setText("I think you lost him. Woohoo!");
+            copController.setMode("fallbehind");
+        }
+    }
+
+    /**
+     * Draws and updates barricades.
+     */
+    public void handleObstacles(){
+        for (Obstacle b : barricadesList) b.step();
+        if (barricadesIndex < barricades.size() && barricades.get(barricadesIndex)==distance){
+            Obstacle newBarricade = new Obstacle(myTruck);
+            newBarricade.setX(barricades.get(barricadesIndex+1));
+            newBarricade.setY(-150);
+            newBarricade.setVelocity(0, SCROLL_SPEED);
+            newBarricade.setHook(this);
+            barricadesList.add(newBarricade);
+            root.getChildren().add(newBarricade);
+            barricadesIndex+=2;
+        }
+
+    }
+
+    /**
+     * Draws and updates powerups
+     */
+    public void handlePowerups(){
+        for (Powerup p : powerupsList) p.step();
+        if (powerupsIndex < powerups.size() && powerups.get(powerupsIndex)==distance){
+            Powerup newPowerup = new Powerup(myTruck);
+            newPowerup.setX(powerups.get(powerupsIndex+1));
+            newPowerup.setY(-150);
+            newPowerup.setVelocity(0, SCROLL_SPEED);
+            newPowerup.setHook(this);
+            powerupsList.add(newPowerup);
+            root.getChildren().add(newPowerup);
+            powerupsIndex+=2;
+        }
+    }
+
+    /**
+     * Checks for win state, and triggers necessary animations.
+     */
+    public void checkTacoBell(){
+        if (distance>5300){
+            displayText.setText("You Win!!!");
+            if (tacoBell==null){
+                tacoImage = new Image(getClass().getClassLoader().getResourceAsStream("Taco-Bell.jpg"));
+                tacoBell = new ImageView(tacoImage);
+                tacoBell.setX(0);
+                tacoBell.setY(0-tacoBell.getBoundsInLocal().getHeight());
+                root.getChildren().add(tacoBell);
+            }
+            if (tacoBell.getY() < 0) tacoBell.setY(tacoBell.getY()+1);
+            myTruck.stop();
+            if (SCROLL_SPEED > 0) SCROLL_SPEED--;
+        }
+    }
+
+    /**
+     * This method is called when an obstacle collides with the player
+     */
     public void handleCollision(Actor a, Truck b){
         if (b.isInvincible()) return;
         b.gotoLabel("crash");
@@ -227,7 +243,6 @@ class RaceGame {
         crashAnimation.play();
         crashAnimation.setOnFinished( new EventHandler<ActionEvent>() {
             public void handle(ActionEvent t){
-                System.out.println("made it here?");
                 reset();
             }
         });
@@ -237,10 +252,12 @@ class RaceGame {
         root.getChildren().remove(a);
     }
 
+    /**
+     * Returns the splash scene to the Main class
+     */
     public Scene showSplash(int width, int height) {
         Group splashRoot = new Group();
         Scene mySplashScene = new Scene(splashRoot, width, height, Color.WHITE);
-        // credz to Ian Guy for the cool painting
         Image splashImage = new Image(getClass().getClassLoader().getResourceAsStream("splash.jpg"));
         ImageView splash = new ImageView(splashImage);
         splashRoot.getChildren().add(splash);

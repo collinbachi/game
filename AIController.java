@@ -38,7 +38,6 @@ class AIController {
     }
 
 	private void step(){
-        // Hide, random, strike, tail
         if (mode.equals("hide")) hide();
 		if (mode.equals("random")) randomDecision();
         if (mode.equals("follow")) follow(150);

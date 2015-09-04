@@ -1,6 +1,5 @@
 import javafx.scene.image.Image;
 
-
 /**
  * Class for obstacles
  * 

@@ -5,28 +5,33 @@ First project for CompSci 308 Fall 2015
 
 See https://github.com/collinbachi/game_dcb31 for original commits.
 
-Name:
+Name: D. Collin Bachi
 
-Date started:
+Date started: 8/25
 
-Date finished:
+Date finished: 9/4
 
-Hours worked:
+Hours worked: ~15
 
-Resources used:
+Resources used: Various images from google image search.
 
-Main class file:
+Main class file: Main.java
 
-Data (non Java) files needed:
+Data (non Java) files needed: All of them
 
-How to play the game:
+How to play the game: Use the arrow keys to avoid obstacles and collect powerups! Try to make it just over 3 miles to Taco Bell...
 
-Keys/Mouse input:
+```sh
+javac ./*.java -d bin
+java -classpath bin:. Main
+```
 
-Cheat Keys:
+Keys/Mouse input: Arrow keys
 
-Known bugs:
+>! Cheat Keys: Space
 
-Extra features:
+Known bugs: Player can cheat by moving offscreen. There is a hard to reproduce bug with the arrow keys' input. 
 
-Impressions/Suggestions:
+Extra features: The game CAN in fact be beat without cheating.
+
+Impressions/Suggestions: I enjoyed the project, but didn't manage my time well. It's always the small things (ex. 45min to figure out splash screen)
