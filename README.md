@@ -28,9 +28,9 @@ java -classpath bin:. Main
 
 Keys/Mouse input: Arrow keys
 
-!> Cheat Keys: Space
+>! Cheat Keys: Space !<
 
-Known bugs: Player can cheat by moving offscreen. There is a hard to reproduce bug with the arrow keys' input. 
+Known bugs: Player can cheat by moving offscreen. There is also a hard to reproduce bug where the player gets stuck moving one direcion. 
 
 Extra features: The game CAN in fact be beat without cheating.
 
