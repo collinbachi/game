@@ -38,10 +38,14 @@ class RaceGame {
     private Rectangle2D backgroundViewport;
 
     private int distance = 0;
-    private List<Integer> barricades = Arrays.asList(350, 25, 420, 500, 455, 25);
+    private List<Integer> barricades = Arrays.asList(350, 25, 420, 500, 455, 25, 550, 65, 625, 105, 675, 225, 700, 275, 750, 45);
     private ArrayList<Obstacle> barricadesList = new ArrayList<Obstacle>();
     private int barricadesIndex = 0;
-    private Image barricadeImage;
+
+    private List<Integer> powerups = Arrays.asList(385, 375, 455, 225, 550, 265, 575, 600);
+    private ArrayList<Powerup> powerupsList = new ArrayList<Powerup>();
+    private int powerupsIndex = 0;
+
     private Text scoreBoard;
 
     private Group root;
@@ -59,10 +63,14 @@ class RaceGame {
     private void reset(){
         System.out.println("resetting...");
         distance = 0;
-        barricades = Arrays.asList(350, 25, 420, 500, 455, 25);
         for (Obstacle o : barricadesList) removeActor(o);
         barricadesList = new ArrayList<Obstacle>();
         barricadesIndex = 0;
+
+        for (Powerup p : powerupsList) removeActor(p);
+        powerupsList = new ArrayList<Powerup>();
+        powerupsIndex = 0;
+
         crashed = false;
         background.setViewport(new Rectangle2D(90, 35, 800, 626));
         myTruck.reset();
@@ -109,8 +117,6 @@ class RaceGame {
         cop.setX(myTruck.getX());
         cop.setY(myTruck.getY() + 2 * myTruck.getHeight());
 
-        barricadeImage = new Image(getClass().getClassLoader().getResourceAsStream("barricade.jpg"));
-
         scoreBoard = new Text(10, 50, "3189321m");
         // order added to the group is the order in whuch they are drawn
         root.getChildren().add(background);
@@ -133,6 +139,7 @@ class RaceGame {
         cop.step(elapsedTime);
         
         for (Obstacle b : barricadesList) b.step();
+        for (Powerup p : powerupsList) p.step();
 
         distance++;
         scoreBoard.setText(distance + "m");
@@ -146,6 +153,17 @@ class RaceGame {
             barricadesList.add(newBarricade);
             root.getChildren().add(newBarricade);
             barricadesIndex+=2;
+        }
+
+        if (powerupsIndex < powerups.size() && powerups.get(powerupsIndex)==distance){
+            Powerup newPowerup = new Powerup(myTruck);
+            newPowerup.setX(powerups.get(powerupsIndex+1));
+            newPowerup.setY(-150);
+            newPowerup.setVelocity(0, SCROLL_SPEED);
+            newPowerup.setHook(this);
+            powerupsList.add(newPowerup);
+            root.getChildren().add(newPowerup);
+            powerupsIndex+=2;
         }
 
         // Horribly implemented

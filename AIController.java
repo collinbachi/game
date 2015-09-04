@@ -16,6 +16,7 @@ class AIController {
 	private boolean left_down = false;
 	private boolean up_down = false;
 	private boolean down_down = false;
+    private String mode = "hide";
 
 	public AIController(Cop c, Scene s){
 		cop = c;
@@ -30,7 +31,12 @@ class AIController {
         animation.play();
 	}
 
+    public void setMode(String s){
+        mode = s;
+    }
+
 	private void step(){
+        // Hide, random, strike, tail
 		randomDecision();
 	}
 

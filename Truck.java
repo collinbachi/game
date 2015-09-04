@@ -1,4 +1,6 @@
 import javafx.scene.image.Image;
+import java.util.Timer;
+import java.util.TimerTask;
 
 
 /**
@@ -8,12 +10,13 @@ import javafx.scene.image.Image;
  */
 class Truck extends Actor {
 
-	private static double TRUCK_SPEED = 60.0;
+	private final double TRUCK_SPEED = 60.0;
+	private int bonus = 0;
 	private double xvel = 0.0;
 	private double yvel = 0.0;
 
 	public void reset(){
-		TRUCK_SPEED = 60.0;
+		bonus = 0;
 	    xvel = 0.0;
 	  	yvel = 0.0;
 	}
@@ -28,9 +31,34 @@ class Truck extends Actor {
 		addFrameWithLabel(crash, "crash");
 	}
 
+	public void powerup(){
+		bonus = 35;
+		System.out.println("powerup");
+		Timer timer = new Timer();
+		timer.schedule( new TimerTask(){
+			public void run(){
+				bonus = 0;
+				if (xvel > TRUCK_SPEED) xvel = TRUCK_SPEED;
+				if (xvel < -TRUCK_SPEED) xvel = -TRUCK_SPEED;
+				if (yvel > TRUCK_SPEED) yvel = TRUCK_SPEED;
+				if (yvel < -TRUCK_SPEED) yvel = -TRUCK_SPEED;
+				System.out.println("no more power");
+			}
+		}, 4000);
+		System.out.println(bonus);
+	}
+
 	public void addVelocity(double deltax, double deltay){
-		xvel += deltax * TRUCK_SPEED;
-		yvel += deltay * TRUCK_SPEED;
+		xvel += deltax * (TRUCK_SPEED + bonus);
+		yvel += deltay * (TRUCK_SPEED + bonus);
+	}
+
+	public void setXVel(double newx){
+		xvel = newx;
+	}
+
+	public void setYVel(double newy){
+		yvel = newy;
 	}
 
 	public void step(double elapsedTime){
