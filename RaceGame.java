@@ -10,6 +10,9 @@ import javafx.geometry.Rectangle2D;
 import javafx.animation.Animation;
 import javafx.util.Duration;
 import javafx.scene.text.Text;
+import java.util.List;
+import java.util.Arrays;
+import java.util.ArrayList;
 
 
 /**
@@ -20,6 +23,7 @@ import javafx.scene.text.Text;
 class RaceGame {
     public static final String TITLE = "Ridin' Dirty";
     private static double SPEED_CONSTANT = 60.0;
+    private static int SCROLL_SPEED = 4;
 
     private Scene myScene;
     private Truck myTruck;
@@ -28,8 +32,15 @@ class RaceGame {
     private AIController copController;
     private ImageView background;
     private Rectangle2D backgroundViewport;
+
+    private int distance = 0;
+    private List<Integer> barricades = Arrays.asList(350, 25, 420, 500, 455, 25);
+    private ArrayList<Obstacle> barricadesList = new ArrayList<Obstacle>();
+    private int barricadesIndex = 0;
+    private Image barricadeImage;
     private Text scoreBoard;
 
+    private Group root;
 
     /**
      * Returns name of the game.
@@ -43,7 +54,7 @@ class RaceGame {
      */
     public Scene init (int width, int height) {
         // Create a scene graph to organize the scene
-        Group root = new Group();
+        root = new Group();
         // Create a place to see the shapes
         myScene = new Scene(root, width, height, Color.WHITE);
         // Load background and set animation
@@ -70,6 +81,8 @@ class RaceGame {
         cop.setX(myTruck.getX());
         cop.setY(myTruck.getY() + 2 * myTruck.getHeight());
 
+        barricadeImage = new Image(getClass().getClassLoader().getResourceAsStream("barricade.jpg"));
+
         scoreBoard = new Text(10, 50, "3189321m");
         // order added to the group is the order in whuch they are drawn
         root.getChildren().add(background);
@@ -89,13 +102,28 @@ class RaceGame {
         // update attributes
         myTruck.step(elapsedTime);
         cop.step(elapsedTime);
+        
+        for (Obstacle b : barricadesList) b.step();
 
+        distance++;
+        scoreBoard.setText(distance + "m");
+
+        if (barricadesIndex < barricades.size() && barricades.get(barricadesIndex)==distance){
+            Obstacle newBarricade = new Obstacle(myTruck);
+            newBarricade.setX(barricades.get(barricadesIndex+1));
+            newBarricade.setY(-150);
+            newBarricade.setVelocity(0, SCROLL_SPEED);
+            newBarricade.setHook(this);
+            barricadesList.add(newBarricade);
+            root.getChildren().add(newBarricade);
+            barricadesIndex+=2;
+        }
 
         // Horribly implemented
         if (background.viewportProperty().getValue().getMinY() > 5){
             background.setViewport(new Rectangle2D(
                     background.viewportProperty().getValue().getMinX(),
-                    background.viewportProperty().getValue().getMinY()-4,
+                    background.viewportProperty().getValue().getMinY()-SCROLL_SPEED,
                     background.viewportProperty().getValue().getWidth(),
                     background.viewportProperty().getValue().getHeight()
                 ));
@@ -107,5 +135,9 @@ class RaceGame {
                     background.viewportProperty().getValue().getHeight()
                 ));
         }
+    }
+
+    public void handleCollision(Actor a, Actor b){
+        System.out.println("Collision!");
     }
 }

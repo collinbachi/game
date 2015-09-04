@@ -1,1 +1,6 @@
-- if two keys already down (arrows), ignore third key (how to ignore key up too?)
+Splash
+Menu
+Dodge obstacles/powerups
+Introduce cop
+Defeat cop
+Taco bell

@@ -31,9 +31,12 @@ class AIController {
 	}
 
 	private void step(){
+		randomDecision();
+	}
+
+	private void randomDecision(){
 		int opt = (int) Math.floor(Math.random() * 8);
 		if (Math.random() < .95) opt = -1; //Do nothing most of the time
-		System.out.println(opt);
 		switch (opt) {
             case 0:
                 cop.setVelocity(-1,0);
