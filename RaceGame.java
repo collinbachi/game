@@ -38,11 +38,13 @@ class RaceGame {
     private Rectangle2D backgroundViewport;
 
     private int distance = 0;
-    private List<Integer> barricades = Arrays.asList(350, 25, 420, 500, 455, 25, 550, 65, 625, 105, 675, 225, 700, 275, 750, 45);
+    private List<Integer> barricades = Arrays.asList(
+        2300, 100, 2350, 275, 2375, 15, 2425, 600, 2475, 500, 2550, 325, 2700, 15);
     private ArrayList<Obstacle> barricadesList = new ArrayList<Obstacle>();
     private int barricadesIndex = 0;
 
-    private List<Integer> powerups = Arrays.asList(385, 375, 455, 225, 550, 265, 575, 600);
+    private List<Integer> powerups = Arrays.asList(
+        1870, 400, 1950, 470, 2320, 580, 2370, 480, 2900, 400);
     private ArrayList<Powerup> powerupsList = new ArrayList<Powerup>();
     private int powerupsIndex = 0;
 
@@ -78,7 +80,7 @@ class RaceGame {
         myTruck.setX(800 / 2 - myTruck.getBoundsInLocal().getWidth() / 2);
         myTruck.setY(500 / 2  - myTruck.getBoundsInLocal().getHeight() / 2);
         cop.setX(myTruck.getX());
-        cop.setY(myTruck.getY() + 2 * myTruck.getHeight());
+        cop.setY(myTruck.getY() + 2 * myTruck.getHeight() + 650);
     }
     /**
      * Create the game's scene
@@ -115,7 +117,7 @@ class RaceGame {
         cop = new Cop(myTruck);
         cop.setHook(this);
         cop.setX(myTruck.getX());
-        cop.setY(myTruck.getY() + 2 * myTruck.getHeight());
+        cop.setY(myTruck.getY() + 2 * myTruck.getHeight() + 650);
 
         scoreBoard = new Text(10, 50, "3189321m");
         // order added to the group is the order in whuch they are drawn
@@ -125,7 +127,7 @@ class RaceGame {
         root.getChildren().add(scoreBoard);
        
         humanController = new HumanController(myTruck, myScene);
-        copController = new AIController(cop, myScene);
+        copController = new AIController(cop, myScene, myTruck);
         return myScene;
     }
 
@@ -144,7 +146,15 @@ class RaceGame {
         distance++;
         scoreBoard.setText(distance + "m");
 
+        if (distance > 2500 && distance < 3500){
+            copController.setMode("follow");
+        }else if(distance>3500){
+            copController.setMode("random");
+        }
+
         if (barricadesIndex < barricades.size() && barricades.get(barricadesIndex)==distance){
+            System.out.print("New Barricade! ");
+            System.out.println(distance);
             Obstacle newBarricade = new Obstacle(myTruck);
             newBarricade.setX(barricades.get(barricadesIndex+1));
             newBarricade.setY(-150);

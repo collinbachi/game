@@ -8,7 +8,7 @@ import javafx.scene.image.Image;
  */
 class Cop extends Actor {
 
-	private static double COP_SPEED = 75.0;
+	private static double COP_SPEED = 95.0;
 	private double xvel = 0.0;
 	private double yvel = 0.0;
 	private Truck truck;
@@ -29,16 +29,37 @@ class Cop extends Actor {
 		truck = t;
 	}
 
+	public void addVelocity(double deltax, double deltay){
+		xvel += deltax * COP_SPEED;
+		yvel += deltay * COP_SPEED;
+	}
+
 	public void setVelocity(double deltax, double deltay){
 		xvel = deltax * COP_SPEED;
 		yvel = deltay * COP_SPEED;
+	}
+
+	public void setXVel(double newx){
+		xvel = newx;
+	}
+
+	public void setYVel(double newy){
+		yvel = newy;
 	}
 
 	public void setHook(RaceGame rg){
 		raceGame = rg;
 	}
 
+	public void adjustSpeed(){
+		while (Math.sqrt(Math.pow(xvel,2) + Math.pow(yvel,2)) > COP_SPEED){
+			xvel *= .9;
+			yvel *= .9;
+		}
+	}
+
 	public void step(double elapsedTime){
+		adjustSpeed();
 		this.setX(this.getX() + xvel * elapsedTime);
 		this.setY(this.getY() + yvel * elapsedTime);
 		if (xvel > 0){

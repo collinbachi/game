@@ -17,11 +17,12 @@ class AIController {
 	private boolean up_down = false;
 	private boolean down_down = false;
     private String mode = "hide";
+    private Truck truck;
 
-	public AIController(Cop c, Scene s){
+	public AIController(Cop c, Scene s, Truck t){
 		cop = c;
 		scene = s;
-
+        truck = t;
 		// sets the AI's loop
         KeyFrame frame = new KeyFrame(Duration.millis(100),
                                       e -> this.step());
@@ -37,8 +38,44 @@ class AIController {
 
 	private void step(){
         // Hide, random, strike, tail
-		randomDecision();
+        if (mode.equals("hide")) hide();
+		if (mode.equals("random")) randomDecision();
+        if (mode.equals("follow")) follow();
 	}
+
+    private void follow(){
+        driveTo((int)truck.getX(), (int)truck.getY() + 150);
+    }
+
+    private void hide(){
+        driveTo((int)truck.getX(), (int)truck.getY() + 650);
+    }
+
+    private void driveTo(int x, int y){
+        if (cop.getX() < x - cop.getWidth()/2){
+            cop.addVelocity(1, 0);
+
+        }
+        if (cop.getX() > x){
+            cop.addVelocity(-1, 0);       
+
+        }
+        if (Math.abs(cop.getX() - x) < 5){
+            cop.setX(x);
+            cop.setXVel(0);
+        }
+        if (cop.getY() < y){
+            cop.addVelocity(0, 1);
+
+        }
+        if (cop.getY() > y){
+            cop.addVelocity(0, -1);
+        }
+        if (Math.abs(cop.getY() - y) < 5){
+            cop.setY(y);
+            cop.setYVel(0);
+        }
+    }
 
 	private void randomDecision(){
 		int opt = (int) Math.floor(Math.random() * 8);

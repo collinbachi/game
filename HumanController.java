@@ -49,19 +49,19 @@ class HumanController {
 	private void handleKeyRelease (KeyCode code) {
         switch (code) {
             case RIGHT:
-                truck.setXVel(0);
+                truck.addVelocity(-1,0);
                 right_down = false;
                 break;
             case LEFT:
-                truck.setXVel(0);
+                truck.addVelocity(1,0);
                 left_down = false;
                 break;
             case UP:
-                truck.setYVel(0);
+                truck.addVelocity(0,1);
                 up_down = false;
                 break;
             case DOWN:
-                truck.setYVel(0); 
+                truck.addVelocity(0,-1); 
                 down_down = false;
                 break;
             default:

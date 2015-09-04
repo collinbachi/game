@@ -10,13 +10,13 @@ import java.util.TimerTask;
  */
 class Truck extends Actor {
 
-	private final double TRUCK_SPEED = 60.0;
-	private int bonus = 0;
+	private final double TRUCK_SPEED = 90.0;
+	private double bonus = 1;
 	private double xvel = 0.0;
 	private double yvel = 0.0;
 
 	public void reset(){
-		bonus = 0;
+		bonus = 1;
 	    xvel = 0.0;
 	  	yvel = 0.0;
 	}
@@ -32,38 +32,27 @@ class Truck extends Actor {
 	}
 
 	public void powerup(){
-		bonus = 35;
+		if (bonus==1) bonus = 1.5;
+			else bonus += 1;
 		System.out.println("powerup");
 		Timer timer = new Timer();
 		timer.schedule( new TimerTask(){
 			public void run(){
-				bonus = 0;
-				if (xvel > TRUCK_SPEED) xvel = TRUCK_SPEED;
-				if (xvel < -TRUCK_SPEED) xvel = -TRUCK_SPEED;
-				if (yvel > TRUCK_SPEED) yvel = TRUCK_SPEED;
-				if (yvel < -TRUCK_SPEED) yvel = -TRUCK_SPEED;
+				bonus = 1;
 				System.out.println("no more power");
 			}
-		}, 4000);
+		}, 7000);
 		System.out.println(bonus);
 	}
 
 	public void addVelocity(double deltax, double deltay){
-		xvel += deltax * (TRUCK_SPEED + bonus);
-		yvel += deltay * (TRUCK_SPEED + bonus);
-	}
-
-	public void setXVel(double newx){
-		xvel = newx;
-	}
-
-	public void setYVel(double newy){
-		yvel = newy;
+		xvel += deltax * TRUCK_SPEED;
+		yvel += deltay * TRUCK_SPEED;
 	}
 
 	public void step(double elapsedTime){
-		this.setX(this.getX() + xvel * elapsedTime);
-		this.setY(this.getY() + yvel * elapsedTime);
+		this.setX(this.getX() + xvel * elapsedTime * bonus);
+		this.setY(this.getY() + yvel * elapsedTime * bonus);
 		if (xvel > 0){
 			this.gotoLabel("right");
 		}else if (xvel == 0){
