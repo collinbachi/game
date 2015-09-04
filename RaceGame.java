@@ -88,10 +88,14 @@ class RaceGame {
     public void step (double elapsedTime) {
         // update attributes
         myTruck.step(elapsedTime);
+        cop.step(elapsedTime);
+
+
+        // Horribly implemented
         if (background.viewportProperty().getValue().getMinY() > 5){
             background.setViewport(new Rectangle2D(
                     background.viewportProperty().getValue().getMinX(),
-                    background.viewportProperty().getValue().getMinY()-1,
+                    background.viewportProperty().getValue().getMinY()-4,
                     background.viewportProperty().getValue().getWidth(),
                     background.viewportProperty().getValue().getHeight()
                 ));

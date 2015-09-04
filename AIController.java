@@ -22,7 +22,7 @@ class AIController {
 		scene = s;
 
 		// sets the AI's loop
-        KeyFrame frame = new KeyFrame(Duration.millis(1000),
+        KeyFrame frame = new KeyFrame(Duration.millis(100),
                                       e -> this.step());
         Timeline animation = new Timeline();
         animation.setCycleCount(Timeline.INDEFINITE);
@@ -32,7 +32,8 @@ class AIController {
 
 	private void step(){
 		int opt = (int) Math.floor(Math.random() * 8);
-		if (Math.random() < .8) opt = -1; //Do nothing most of the time
+		if (Math.random() < .95) opt = -1; //Do nothing most of the time
+		System.out.println(opt);
 		switch (opt) {
             case 0:
                 cop.setVelocity(-1,0);
@@ -64,15 +65,23 @@ class AIController {
         //Check for collisions, and reverse if so
         if (cop.getX() < scene.getX()){
         	cop.setVelocity(1, 0);
+        	System.out.println("Cop reverse");
+
         }
         if (cop.getX() > scene.getX() + scene.getWidth() - cop.getWidth()){
-        	cop.setVelocity(-1, 0);
+        	cop.setVelocity(-1, 0);       
+        	System.out.println("Cop reverse");
+
         }
         if (cop.getY() < scene.getY()){
         	cop.setVelocity(0, 1);
+        	System.out.println("Cop reverse");
+
         }
         if (cop.getY() > scene.getY() + scene.getHeight() - cop.getHeight()){
         	cop.setVelocity(0, -1);
+        	System.out.println("Cop reverse");
+
         }
 	}
 }

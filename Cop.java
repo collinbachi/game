@@ -21,8 +21,8 @@ class Cop extends Actor {
 	}
 
 	public void setVelocity(double deltax, double deltay){
-		xvel += deltax * COP_SPEED;
-		yvel += deltay * COP_SPEED;
+		xvel = deltax * COP_SPEED;
+		yvel = deltay * COP_SPEED;
 	}
 
 	public void step(double elapsedTime){
