@@ -18,6 +18,7 @@ class AIController {
 	private boolean down_down = false;
     private String mode = "hide";
     private Truck truck;
+    private int followDist = 150;
 
 	public AIController(Cop c, Scene s, Truck t){
 		cop = c;
@@ -40,11 +41,15 @@ class AIController {
         // Hide, random, strike, tail
         if (mode.equals("hide")) hide();
 		if (mode.equals("random")) randomDecision();
-        if (mode.equals("follow")) follow();
+        if (mode.equals("follow")) follow(150);
+        if (mode.equals("fallbehind")){
+            followDist--;
+            follow(followDist);
+        }
 	}
 
-    private void follow(){
-        driveTo((int)truck.getX(), (int)truck.getY() + 150);
+    private void follow(int dist){
+        driveTo((int)truck.getX(), (int)truck.getY() + dist);
     }
 
     private void hide(){
@@ -79,6 +84,9 @@ class AIController {
 
 	private void randomDecision(){
 		int opt = (int) Math.floor(Math.random() * 8);
+        if (Math.random() < .2){
+            driveTo((int)(truck.getX() + (Math.random() - .5)*250), (int)truck.getY());
+        }
 		if (Math.random() < .95) opt = -1; //Do nothing most of the time
 		switch (opt) {
             case 0:

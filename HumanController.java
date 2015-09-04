@@ -41,6 +41,9 @@ class HumanController {
                 if (!down_down) truck.addVelocity(0,1); 
                 down_down = true;
                 break;
+            case SPACE:
+                 truck.cheat();
+                 break;
             default:
                 // do nothing
         }

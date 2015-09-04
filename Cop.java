@@ -8,16 +8,18 @@ import javafx.scene.image.Image;
  */
 class Cop extends Actor {
 
-	private static double COP_SPEED = 95.0;
+	private static double COP_SPEED = 105.0;
 	private double xvel = 0.0;
 	private double yvel = 0.0;
 	private Truck truck;
 	private RaceGame raceGame;
+	private double bonus = 1;
 
 	public void reset(){
 		COP_SPEED = 75.0;
 	    xvel = 0.0;
 	  	yvel = 0.0;
+	  	bonus = 1;
 	}
 
 	public Cop(Truck t){
@@ -51,6 +53,9 @@ class Cop extends Actor {
 		raceGame = rg;
 	}
 
+	public void setBonus(double b){
+		bonus = b;
+	}
 	public void adjustSpeed(){
 		while (Math.sqrt(Math.pow(xvel,2) + Math.pow(yvel,2)) > COP_SPEED){
 			xvel *= .9;
@@ -60,8 +65,8 @@ class Cop extends Actor {
 
 	public void step(double elapsedTime){
 		adjustSpeed();
-		this.setX(this.getX() + xvel * elapsedTime);
-		this.setY(this.getY() + yvel * elapsedTime);
+		this.setX(this.getX() + xvel * elapsedTime * bonus);
+		this.setY(this.getY() + yvel * elapsedTime * bonus);
 		if (xvel > 0){
 			this.gotoLabel("right");
 		}else if (xvel == 0){

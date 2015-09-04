@@ -150,6 +150,9 @@ class RaceGame {
             copController.setMode("follow");
         }else if(distance>3500){
             copController.setMode("random");
+            cop.setBonus(2.0);
+        }else if(distance>5000){
+            copController.setMode("fallbehind");
         }
 
         if (barricadesIndex < barricades.size() && barricades.get(barricadesIndex)==distance){
@@ -196,6 +199,7 @@ class RaceGame {
 
     public void handleCollision(Actor a, Truck b){
         System.out.println("Collision!");
+        if (b.isInvincible()) return;
         b.gotoLabel("crash");
         crashed = true;
         KeyFrame crashFrame = new KeyFrame(Duration.millis(1000));

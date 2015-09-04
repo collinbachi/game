@@ -14,6 +14,7 @@ class Truck extends Actor {
 	private double bonus = 1;
 	private double xvel = 0.0;
 	private double yvel = 0.0;
+	private boolean invincible = false;
 
 	public void reset(){
 		bonus = 1;
@@ -29,6 +30,13 @@ class Truck extends Actor {
 		addFrameWithLabel(left, "left");
 		addFrameWithLabel(right, "right");
 		addFrameWithLabel(crash, "crash");
+	}
+
+	public void cheat(){
+		invincible = true;
+	}
+	public boolean isInvincible(){
+		return invincible;
 	}
 
 	public void powerup(){
