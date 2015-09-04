@@ -30,7 +30,7 @@ Keys/Mouse input: Arrow keys
 
 Cheat Keys: Space 
 
-Known bugs: Player can cheat by moving offscreen. There is also a hard to reproduce bug where the player gets stuck moving one direcion. 
+Known bugs: Player can cheat by moving offscreen. There is also a hard to reproduce bug where the player gets stuck moving one direcion. Too many resets after death may cause a bug.
 
 Extra features: The game CAN in fact be beat without cheating.
 
