@@ -1,3 +1,6 @@
+// This entire file is part of my masterpiece.
+// D. Collin Bachi
+
 import javafx.scene.input.KeyCode;
 import javafx.scene.Scene;
 
